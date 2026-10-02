@@ -9,12 +9,12 @@
 
 # Objective
 
-The purpose of this assignment was to gain hands-on experience with Hadoop's distributed storage and distributed processing capabilities. The assignment focused on loading sales transaction data into the Hadoop Distributed File System (HDFS) and then executing a Java-based MapReduce application to aggregate sales records by country.
+The objective of this assignment was to gain practical experience using Hadoop for distributed storage and distributed processing of data. The assignment involved loading a sales transaction dataset into the Hadoop Distributed File System (HDFS) and executing a Java-based MapReduce application to aggregate sales transactions by country.
 
-The assignment was completed in two phases:
+The assignment was performed in two phases:
 
 1. Ingesting data into HDFS.
-2. Executing a MapReduce job using Java programs to summarize sales data by country.
+2. Executing a Java MapReduce program to calculate sales counts by country.
 
 ---
 
@@ -28,14 +28,14 @@ The assignment was completed in two phases:
 - YARN
 - Java 8
 - MapReduce
-- Visual Studio Code
 - Linux Command Line
+- Visual Studio Code
 
 ---
 
 ## Hadoop Services
 
-The Hadoop cluster consisted of:
+The Hadoop environment included the following containers:
 
 ```text
 namenode
@@ -45,13 +45,13 @@ nodemanager
 historyserver
 ```
 
-All services were verified to be operational before beginning the assignment.
+All services were running successfully before beginning the assignment.
 
 ---
 
 # Assignment Files
 
-The provided assignment package contained:
+The assignment package contained the following files:
 
 ```text
 testprogram/
@@ -70,11 +70,11 @@ testprogram/
 
 ### Objective
 
-Extract the assignment files to the local machine.
+Extract the assignment package and verify its contents.
 
 ### Result
 
-The ZIP file was successfully extracted and contained:
+The ZIP archive was successfully extracted and the testprogram folder contained:
 
 ```text
 Manifest.txt
@@ -86,7 +86,7 @@ SalesData.csv
 
 ### Screenshot 1
 
-Insert:
+Insert Screenshot:
 
 ```text
 Part 1 - Step 1 - Extract testprogram.zip
@@ -94,11 +94,11 @@ Part 1 - Step 1 - Extract testprogram.zip
 
 ---
 
-## Step 2: Copy testprogram Folder to the Hadoop NameNode
+## Step 2: Copy testprogram Folder to Hadoop NameNode
 
 ### Objective
 
-Transfer the project folder into the Hadoop NameNode container.
+Transfer the testprogram folder into the Hadoop NameNode container.
 
 ### Command
 
@@ -123,7 +123,7 @@ Output:
 testprogram
 ```
 
-The folder contents were also verified:
+Contents:
 
 ```text
 Manifest.txt
@@ -135,7 +135,7 @@ SalesData.csv
 
 ### Screenshot 2
 
-Insert:
+Insert Screenshot:
 
 ```text
 Part 1 - Step 2 - Copy testprogram Folder to Hadoop NameNode
@@ -147,7 +147,7 @@ Part 1 - Step 2 - Copy testprogram Folder to Hadoop NameNode
 
 ### Objective
 
-Create an HDFS input directory and load the CSV dataset into Hadoop storage.
+Create an HDFS input directory and load the sales dataset into Hadoop storage.
 
 ### Create HDFS Directory
 
@@ -155,7 +155,7 @@ Create an HDFS input directory and load the CSV dataset into Hadoop storage.
 hdfs dfs -mkdir /inputMapReduce
 ```
 
-### Upload Data
+### Upload File
 
 ```bash
 hdfs dfs -copyFromLocal SalesData.csv /inputMapReduce
@@ -175,7 +175,7 @@ Output:
 
 ### Screenshot 3
 
-Insert:
+Insert Screenshot:
 
 ```text
 Part 1 - Step 3 - Copy SalesData.csv into inputMapReduce
@@ -187,13 +187,17 @@ Part 1 - Step 3 - Copy SalesData.csv into inputMapReduce
 
 ### Objective
 
-Confirm the file was successfully copied into HDFS.
+Confirm that the file was successfully stored in HDFS.
 
 ### Commands
+
+View beginning of file:
 
 ```bash
 hdfs dfs -head /inputMapReduce/SalesData.csv
 ```
+
+View end of file:
 
 ```bash
 hdfs dfs -tail /inputMapReduce/SalesData.csv
@@ -201,11 +205,11 @@ hdfs dfs -tail /inputMapReduce/SalesData.csv
 
 ### Result
 
-The dataset was successfully stored within HDFS and the contents were displayed.
+The contents of the dataset were successfully displayed, confirming that the file was uploaded correctly into HDFS.
 
 ### Screenshot 4
 
-Insert:
+Insert Screenshot:
 
 ```text
 Part 1 - Step 4 - Verify SalesData.csv Using HDFS Cat
@@ -215,71 +219,82 @@ Part 1 - Step 4 - Verify SalesData.csv Using HDFS Cat
 
 # Part 2: Performing MapReduce - Aggregation Sales by Country
 
+## Java Program Descriptions
+
+### SalesCountryDriver.java
+
+SalesCountryDriver.java serves as the main controller and configuration class for the Hadoop MapReduce job. The driver creates the Hadoop job configuration, specifies the Mapper and Reducer classes, defines the key and value output types, configures the input and output paths, and submits the MapReduce job for execution.
+
+Primary responsibilities:
+
+- Create Hadoop job configuration.
+- Register Mapper class.
+- Register Reducer class.
+- Configure input path.
+- Configure output path.
+- Execute MapReduce processing.
+
 ---
 
-# Description of Java Files
+### SalesMapper.java
 
-## SalesCountryDriver.java
+SalesMapper.java is the Mapper component responsible for processing each individual record in the SalesData.csv file.
 
-SalesCountryDriver.java serves as the main controller for the MapReduce job. It configures the Hadoop job, assigns the Mapper and Reducer classes, defines the input and output paths, specifies input and output data types, and ultimately submits the MapReduce job for execution.
+The mapper:
 
-Key responsibilities:
-
-- Define job configuration
-- Register mapper and reducer classes
-- Define input/output paths
-- Execute the Hadoop job
-
----
-
-## SalesMapper.java
-
-SalesMapper.java is responsible for processing each individual sales record. The mapper reads each row from SalesData.csv, splits the record into individual fields, extracts the country field, and emits a key-value pair in the format:
+1. Reads each sales transaction record.
+2. Converts the row into a string.
+3. Splits the record into individual fields using a comma delimiter.
+4. Extracts the country field.
+5. Emits a key-value pair in the format:
 
 ```text
 <Country,1>
 ```
-
-Each sales transaction contributes one count toward its corresponding country.
 
 Example:
 
 ```text
 Canada → <Canada,1>
 Germany → <Germany,1>
+United States → <United States,1>
 ```
+
+These intermediate records are then passed to Hadoop's Shuffle and Sort phase.
 
 ---
 
-## SalesCountryReducer.java
+### SalesCountryReducer.java
 
-SalesCountryReducer.java aggregates all intermediate results generated by the mapper. Hadoop groups all key-value pairs with the same country together, and the reducer sums the values to calculate the total number of sales records for each country.
+SalesCountryReducer.java is the Reducer component responsible for aggregating mapper results.
+
+The reducer receives:
+
+```text
+Canada {1,1,1}
+Germany {1,1}
+Australia {1,1,1,1}
+```
+
+It sums the values for each country and generates the final result.
 
 Example:
 
-Mapper Output:
-
-```text
-<Canada,1>
-<Canada,1>
-<Canada,1>
-```
-
-Reducer Output:
-
 ```text
 Canada 3
+Germany 2
+Australia 4
 ```
 
-The reducer generates the final sales count by country.
+The reducer produces the final sales transaction count by country.
 
 ---
 
-# Step 5: Configure Java and Hadoop Environment Variables
+## Step 5: Configure Hadoop Environment Variables
 
 ### Objective
 
-Configure the environment required to compile and run Hadoop Java applications.
+Configure the environment required to compile and execute Hadoop Java applications.
 
 ### Commands
 
@@ -293,9 +308,21 @@ export CLASSPATH="$HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-client-co
 
 ```bash
 export HDFS_NAMENODE_USER=root
+```
+
+```bash
 export HDFS_DATANODE_USER=root
+```
+
+```bash
 export HDFS_SECONDARYNAMENODE_USER=root
+```
+
+```bash
 export YARN_RESOURCEMANAGER_USER=root
+```
+
+```bash
 export YARN_NODEMANAGER_USER=root
 ```
 
@@ -313,7 +340,7 @@ Output:
 
 ### Screenshot 5
 
-Insert:
+Insert Screenshot:
 
 ```text
 Part 2 - Step 2 - Configure Hadoop Environment Variables
@@ -321,7 +348,7 @@ Part 2 - Step 2 - Configure Hadoop Environment Variables
 
 ---
 
-# Step 6: Compile Java Programs
+## Step 6: Compile Java Programs
 
 ### Objective
 
@@ -349,7 +376,7 @@ SalesMapper.class
 
 ### Screenshot 6
 
-Insert:
+Insert Screenshot:
 
 ```text
 Part 2 - Step 3 - Compile Java Files
@@ -357,11 +384,11 @@ Part 2 - Step 3 - Compile Java Files
 
 ---
 
-# Step 7: Create JAR File
+## Step 7: Create ProductSalePerCountry.jar
 
 ### Objective
 
-Package the compiled Java classes into a Hadoop executable.
+Package the compiled Java classes into an executable JAR file.
 
 ### Command
 
@@ -381,164 +408,175 @@ ProductSaleP*rCountry.jar
 ```
 
 ### Screenshot 7*
-Insert:
+Insert Screenshot:
 
 ```text
-Part 2 - Step 4 * Create ProductSalePerCountry.jar
-*``
+Part * - Step 4 - Create ProductSalePerC*untry.jar
+```
 
 ---
 
-# Step 8: Execute the Map*educe Job
+## Step 8: Exe*ute the MapReduce Job
 
-### Objective
+### Objecti*e
 
-Perform *istributed sales aggregation by co*ntry.
+Execute the Hadoop MapReduce ap*lication.
 
 ### Command
 
 ```bash
-hadoop*jar ProductSalePerCountry.jar /inp*tMapReduce /mapreduce_output_sales*```
+ha*oop jar ProductSalePerCountry.jar *inputMapReduce /mapreduce_output_s*les
+```
 
 ### Result
 
-The MapReduce job*executed successfully.
+The MapReduce*job completed successfully.
 
-Output:
-
-`*`text
-map 100%
-reduce 100%
-```
-
-an*:
+Outpu*:
 
 ```text
-Job completed successfu*ly
+map 100%
+reduce 100%
+``*
+
+and
+
+```text
+Job completed succe*sfully
 ```
 
 ### Job Statistics
 
-```tex*
+``*text
 Map Input Records = 999
-Map Outpu* Records = 999
-Reduce Output Recor*s = 58
+Map O*tput Records = 999
+Reduce Output R*cords = 58
 ```
 
-This indicates:
+Interpretation:
 
-- 999*sales records processed
-- 58 uniqu* country groups produced
+-*999 sales records processed.
+- 58 *ountries identified.
+- Aggregated *esults generated successfully.
 
-### Scre*nshot 8
+##* Screenshot 8
 
-Insert:
-
-```text
-Part 2 -*Step 5 - Execute Sales Aggregation*MapReduce Job
-```
-
+Insert Screenshot:
+*```text
+Part 2 - Step 5 - Execute *ales Aggregation MapReduce Job
+```*
 ---
 
-# Step 9: *isplay Aggregation Results
+## Step 9: Display Aggregati*n Results
 
-### Ob*ective
+### Objective
 
-Review the reducer output *enerated by Hadoop.
-
-### Verify Ou*put Folder
+Review t*e output generated by the reducer.*
+### Verify Output Files
 
 ```bash
-hdfs dfs -ls /*apreduce_output_sales
+*dfs dfs -ls /mapreduce_output_sale*
 ```
 
-Output:*
+Output:
+
 ```text
 _SUCCESS
-part-00000
+pa*t-00000
 ```
 
-*## Display Results
+### Display Results
 
-```bash
-hdfs d*s -cat /mapreduce_output_sales/par*-00000
+*``bash
+hdfs dfs -cat /mapreduce_ou*put_sales/part-00000
 ```
 
-### Sample Results
+### Samp*e Results
 
-``*text
-Australia     38
-Canada      * 76
-France        27
-Germany      *25
-Ireland       49
-Netherlands   *2
-Spain         12
-Sweden        1*
+```text
+Argentina      *
+Australia      38
+Austria        *
+Brazil         5
+Canada         7*
+France         27
+Germany        *5
+Ireland        49
+Netherlands   *22
+Spain          12
+Sweden       * 13
 ```
 
-The reducer successfully agg*egated all sales transactions by c*untry.
+The results represent the*number of sales transactions assoc*ated with each country.
 
-### Screenshot 9
+### Scree*shot 9
 
-Insert:
-*```text
-Part 2 - Step 6 - Display *ales Aggregation Results
+Insert Screenshot:
+
+```tex*
+Part 2 - Step 6 - Display Sales A*gregation Results
 ```
 
 ---
-*# MapReduce Processing Workflow
 
-`*`text
+# MapR*duce Workflow
+
+```text
 SalesData.csv
         ↓
-Uplo*d to HDFS
+Upload to HDFS
         ↓
-Mapper
-       *↓
+SalesMapper.java
+        ↓
 <Country,1>
         ↓
-Shuffle & *ort
+Shuffle and Sort
         ↓
 Group by Country
-   *    ↓
-Reducer
         ↓
-<Country,C*unt>
+SalesCountryReducer.java
+        ↓
+<Country,Total Transactions>
         ↓
 part-00000
 ```
 
----*
+---
+
 # Results Summary
 
-| Metric | Val*e |
-|----------*----------|
-| Input Records | 999 *
-| Mapper Output*Records | 999 |
-* Reduc*r Output Records | 58 |
-| Map*Tasks*| 2 |
-| Reduce*Tasks | 1 |
-| Job*Status | Successful |
+| Metric | Result |
+|----------|----------|
+| Input Dataset | SalesData.csv |
+| Records Processed | 999 |
+| Mapper Output Records | 999 |
+| Unique Countries | 58 |
+| Reducer Output Records | 58 |
+| Map Tasks | 2 |
+| Reduce Tasks | 1 |
+| Job Status | Successful |
 
-*--
+---
 
-* Key Concepts Demonstrated
+# Key Concepts Demonstrated
 
-- Hado*p*Distributed File System (HDFS)
-- M*pReduce Framework
-- Java-Based Had*op Development
-- Distributed Proce*sing
+- Hadoop Distributed File System (HDFS)
+- Java-Based MapReduce Development
+- Distributed Data Processing
+- Hadoop Job Configuration
 - Data Aggregation
-- Hadoop*Job Configuration
-- Java*Compilation*- JAR Packaging
-- Hadoop*Command Line Operations
-- Big Data*Analytics
+- Java Compilation
+- JAR Packaging
+- HDFS Administration
+- Hadoop Command-Line Operations
+- Big Data Analytics
 
 ---
 
 # Conclusion
 
-*his assignment*successfully demonstrated how Hado*p can be used to store and*process large datasets using HDFS *nd MapReduce. Sales transaction*data was ingested into Hadoop stor*ge, Java MapReduce programs were c*mpiled and packaged into a J*R*file, and a distributed aggregatio* job was executed to calculate tra*saction counts by country.
+This assignment successfully demonstrated how Hadoop can be used for distributed storage and distributed processing of large datasets. The SalesData.csv dataset was ingested into HDFS, processed using a Java-based MapReduce application, and aggregated by country.
 
-The as*ignment reinforced key Hadoop conc*pts including distributed storage,*distributed processing, Java-based*MapReduce development, HDFS admini*tration, and large-scale data anal*tics. The successful*execution of the MapReduce job ill*strates Hadoop's ability to transf*rm raw transactional data into mea*ingful analytical output through p*rallel processing and aggregation.*
+The Mapper extracted country information from individual sales records while the Reducer summed transaction counts for each country. The final output produced 58 country-level aggregates from 999 sales records.
+
+This assignment reinforced practical experience with Hadoop, HDFS, MapReduce, Java development, JAR packaging, distributed analytics, and large-scale data processing workflows.
