@@ -3,8 +3,7 @@
 **Course:** MIT Professional Education - Data Engineering Program  
 **Module:** Module 18 - Platforms for Handling Big Data  
 **Activity:** Required Coding Activity 18.1  
-**Student:** Clifford Ferraren  
-**Date:** October 2026
+**Student:** Clifford Ferraren
 
 ---
 
@@ -53,12 +52,15 @@ docker ps
 
 ## Result
 
-The command successfully displayed the list of running Docker containers.
+The command successfully displayed the list of running Docker containers. Prior to deployment, no Hadoop containers were running.
 
 ### Screenshot 1
 
-**Insert Screenshot:**
-`step1-docker-ps.png`
+Insert Screenshot:
+
+```text
+step1-docker-ps.png
+```
 
 ---
 
@@ -76,12 +78,23 @@ git clone git@github.com:big-data-europe/docker-hadoop.git
 
 ## Result
 
-The repository was successfully cloned to the local machine.
+The Hadoop Docker repository was successfully cloned to the local machine.
+
+Example output:
+
+```text
+Cloning into 'docker-hadoop'...
+Receiving objects: 100%
+Resolving deltas: 100%
+```
 
 ### Screenshot 2
 
-**Insert Screenshot:**
-`step2-git-clone.png`
+Insert Screenshot:
+
+```text
+step2-git-clone.png
+```
 
 ---
 
@@ -89,7 +102,7 @@ The repository was successfully cloned to the local machine.
 
 ## Objective
 
-Verify the presence of the Docker Compose configuration file.
+Verify the presence of the Docker Compose configuration file used to deploy the Hadoop environment.
 
 ## Commands Executed
 
@@ -101,191 +114,209 @@ cd docker-hadoop
 dir
 ```
 
-```bash
-dir *.yml
-```
-
 ## Result
 
-The repositor* contains the following Docker Com*ose files:
+The repository contains the required Docker Compose configuration files:
 
-```text*docker-compose.yml
-docker-compose-*3.yml
+```text
+docker-compose.yml
+docker-compose-v3.yml
 ```
 
-*he primary deployment*file required by the activity was *uccessfully identified.
+The primary deployment file, `docker-compose.yml`, was successfully identified.
 
-### Scree*shot 3
+### Screenshot 3
 
-**Insert Screenshot:**
-`st*p3-docker-compose-file.png`
+Insert Screenshot:
+
+```text
+step3-docker-compose-file.png
+```
 
 ---
 
-* Step 4: Create Hadoop Containers
-*## Objective
+# Step 4: Create Hadoop Containers
 
-Deploy the*Hadoop environment using Docker Co*pose.
+## Objective
+
+Deploy the Hadoop environment using Docker Compose.
 
 ## Command Executed
 
-```bas*
+```bash
 docker compose up -d
 ```
 
-## Resu*t
+## Explanation
+
+The `-d` parameter runs the containers in detached mode, allowing the services to run in the background.
+
+## Result
 
 Docker successfully:
 
-- Downloa*ed the Hadoop images
-- Created the*required volumes
-- Created the Had*op network
-- Created the container*
+- Downloaded the required Hadoop images
+- Created the Docker network
+- Created the Docker volumes
+- Created all Hadoop containers
 - Started all Hadoop services
 
-Co*tainers created:
+Containers created:
 
-```*ext
+```text
 namenode
 datanode
-resourcemana*er
+resourcemanager
 nodemanager
 historyserver
 ```
 
-*## Screenshot 4
+### Screenshot 4
 
-**Insert*Screenshot:**
-`step4-docker-compos*-up.png`
+Insert Screenshot:
+
+```text
+step4-docker-compose-up.png
+```
 
 ---
 
-* Step 5: Verify Container Health
+# Step 5: Verify Container Health
 
-*# Objective
+## Objective
 
-Confirm that*all Hadoop containers are running *nd healthy.
+Verify that all Hadoop services are running correctly.
 
 ## Command Executed
 
-*``bash
+```bash
 docker ps
 ```
 
 ## Result
 
-A*l Hadoop services*reported a healthy status.
+All Hadoop containers displayed a healthy status.
 
-Verifi*d containers:
+Verified services:
 
 ```text
 namenode
-da*an*de
+datanode
 resourcemanager
 nodemanager
-his*oryserver
+historyserver
 ```
 
-*xample Status:
+Example status:
 
-```text*Up 9 minutes *healthy)
+```text
+Up 9 minutes (healthy)
 ```
 
-This confirms that t*e Hadoop cluster services started *uccessfully and are operating norm*lly.
+This confirmed that the Hadoop cluster started successfully and all services were operating normally.
 
 ### Screenshot 5
 
-**Insert S***enshot:**
-`step5-healthy-contain*rs.png`
+Insert Screenshot:
+
+```text
+step5-healthy-containers.png
+```
 
 ---
 
-# Step 6: Access the*Hadoop Web Interface
+# Step 6: Access the Hadoop Web Interface
 
-## Objective*
-Verify that the Hadoop NameNode w*b interface is available.
+## Objective
 
-## URL *ccessed
+Verify that the Hadoop NameNode web interface is accessible.
+
+## URL Accessed
 
 ```text
-http://localhost:*870
+http://localhost:9870
 ```
 
 ## Result
 
-The Hadoop Nam*Node web interface loaded successf*lly.
+The Hadoop HDFS NameNode web interface loaded successfully.
 
-The interface displayed:
+The page displayed:
 
-- *ameNode status
-- Cluster summary
--*Storage capacity
-- Live nodes
-- Bl*ck information
-- H*FS statistics
+- NameNode Overview
+- Cluster Summary
+- DFS Capacity
+- Live Nodes
+- Block Information
+- HDFS Statistics
 
-The webpage confirm*d that:
+The dashboard confirmed:
 
-```*ext
+```text
 namenode:9000 (active)
 ```
 
-*nd*showed:
+and showed:
 
-```text*Live Nodes: 1
+```text
+Live Nodes: 1
 Dead Nodes: 0
-*``
+```
 
-*ndicating the Hadoop cluster was f*nctioning correctly.
+indicating that the Hadoop cluster was functioning correctly.
 
-### Screensh*t 6
+### Screenshot 6
 
-**Insert Screenshot:**
-`step6*hdfs-web-ui.png`
+Insert Screenshot:
 
----
-
-* Verification Summary
-
-| Step | Ta*k | Status |
-|--------|--------|--*-----|
-| * | Review Docker containers | ✅ Co*plete |
-| * | Clone Hadoop repository | ✅ Com*lete |
-| 3 | Locate docker-compose*yml | ✅ Complete |
-| 4 | Create Ha*oop containers | ✅ Complete |
-| 5 * Verify healthy containers | ✅ Com*lete |
-| 6 | Open Hadoop NameNode *I | ✅ Complete |
+```text
+step6-hdfs-web-ui.png
+```
 
 ---
 
-# Discussio*
+# Verification Summary
 
-This activity*demonstrated the process of deploy*ng Hadoop using Docker containers *nstead of performing a traditional*manual installation. Docker signif*cantly simplifies Hadoop deploymen* by packaging all required depende*cies into portable containers.
-
-Th* Hadoop environment created during*this exercise consisted of the cor* services necessary to support dis*ributed storage and resource manag*ment within a Hadoop cluster. Usin* Docker Compose allowed*all services to be deployed with a*single command,*reducing setup complexity and ensu*ing consistent configuration.
-
-Ver*fication through the Docker comman*-line tools and the Hadoop NameNod* web interface confirmed that the *luster was functioning correctly a*d was ready for future exercises i*volving HDFS and MapReduce.
+| Step | Task | Status |
+|--------|--------|--------|
+| 1 | Review Docker containers | ✅ Complete |
+| 2 | Clone Hadoop repository | ✅ Complete |
+| 3 | Locate docker-compose.yml | ✅ Complete |
+| 4 | Create Hadoop containers | ✅ Complete |
+| 5 | Verify healthy containers | ✅ Complete |
+| 6 | Access Hadoop NameNode UI | ✅ Complete |
 
 ---
 
-* Conclusion
+# Discussion
 
-In this activity, a c*mplete Hadoop environment was succ*ssfully deployed using Docker cont*iners. The Hadoop Docker images we*e downloaded, the required contain*rs were created, all services reac*ed a healthy state, and the HDFS N*meNode web interface*was successfully accessed through * web browser.
+This activity demonstrated how Hadoop can be rapidly deployed using Docker containers instead of a traditional manual installation. Docker Compose simplified the deployment process by automatically creating multiple Hadoop services and their associated networking configurations.
 
-The completed envir*nment provides a foundation for fu*ure Hadoop exercises, including st*ring data in HDFS, executing MapRe*uce jobs, and performing large-sca*e distributed data processing.
+The deployed environment consisted of the core Hadoop services required for distributed storage and resource management. Verification using both Docker commands and the HDFS NameNode web interface confirmed that the Hadoop cluster was operating correctly.
 
---*
+This environment now provides a foundation for future Hadoop exercises involving HDFS storage, MapReduce processing, and distributed data analytics.
+
+---
+
+# Conclusion
+
+A fully operational Hadoop environment was successfully deployed using Docker containers. The Hadoop Docker images were downloaded, all required containers were created, container health was verified, and the Hadoop HDFS NameNode interface was successfully accessed through a web browser.
+
+This activity provided practical experience with containerized Hadoop deployment and demonstrated the relationship between Docker, HDFS, and distributed computing environments.
+
+---
 
 # Key Concepts Learned
 
-- Docker*Containers
+- Docker Containers
 - Docker Compose
-- Hado*p Deployment
-- HDFS (Hadoop Distri*uted File System)
+- Hadoop Deployment
+- Hadoop Distributed File System (HDFS)
 - NameNode
-- Dat*Node
+- DataNode
 - ResourceManager
-- NodeManag*r
-- Hadoop Cluster Architecture
-- *istributed Storage
-- Big Data Proc*ssing
+- NodeManager
+- HistoryServer
+- Distributed Storage
+- Big Data Infrastructure
+- Hadoop Cluster Administration

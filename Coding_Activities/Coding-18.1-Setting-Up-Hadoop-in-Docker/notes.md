@@ -5,7 +5,7 @@
 
 In this activity, Hadoop was deployed using Docker containers provided by the Big Data Europe Project. The objective was to create a fully functioning Hadoop environment, verify that all services were healthy, and confirm that the Hadoop Distributed File System (HDFS) web interface was accessible.
 
-This hands-on exercise demonstrated how containerization simplifies Hadoop deployment and provides a reproducible environment for big data processing.
+The environment was deployed using Docker Compose, which allowed multiple Hadoop services to be launched with a single command.
 
 ---
 
@@ -19,22 +19,22 @@ This hands-on exercise demonstrated how containerization simplifies Hadoop deplo
 
 ## Docker
 
-Docker provides lightweight containers that package applications and dependencies together.
+Docker is a containerization platform that packages applications and their dependencies into isolated environments called containers.
 
 Benefits:
 
-- Consistent deployment
-- Easy configuration
-- Isolation of services
-- Faster setup compared to manual installation
+- Fast deployment
+- Environment consistency
+- Simplified installation
+- Easy scalability
 
 ---
 
 ## Docker Compose
 
-Docker Compose automates deployment of multiple containers using a single configuration file.
+Docker Compose orchestrates multiple containers using a YAML configuration file.
 
-Key file:
+Primary file:
 
 ```text
 docker-compose.yml
@@ -42,10 +42,10 @@ docker-compose.yml
 
 Purpose:
 
-- Defines services
-- Defines volumes
-- Defines networking
-- Defines dependencies
+- Deploy multi-container applications
+- Configure networking
+- Configure storage volumes
+- Simplify service management
 
 ---
 
@@ -55,20 +55,22 @@ Hadoop is an open-source framework used for:
 
 - Distributed storage
 - Distributed processing
-- Big data analytics
+- Big Data analytics
 
-Core components include:
+Core Hadoop Components:
 
-- HDFS
-- MapReduce
-- YARN
-- Hadoop Common
+```text
+HDFS
+MapReduce
+YARN
+Hadoop Common
+```
 
 ---
 
-# Environment Setup
+# Environment Information
 
-## Verify Docker Installation
+## Docker Version
 
 Command:
 
@@ -82,23 +84,25 @@ Result:
 Docker version 29.8.1
 ```
 
-This verified Docker Desktop was installed and operational.
-
 ---
 
-# Step 1: Review Existing Containers
+# Step 1: Review Existing Docker Containers
 
-Command:
+## Command
 
 ```bash
 docker ps
 ```
 
-Purpose:
+## Purpose
 
-Displays all currently running Docker containers.
+Displays all currently running containers.
 
-Initial Result:
+## Result
+
+No Hadoop containers were running prior to deployment.
+
+Output displayed:
 
 ```text
 CONTAINER ID
@@ -110,47 +114,59 @@ PORTS
 NAMES
 ```
 
-No Hadoop containers were running prior to deployment.
+### Screenshot
+
+```text
+step1-docker-ps.png
+```
 
 ### Concept Learned
 
-Docker containers must be running before services become accessible.
+Containers must be running before services become available to users.
 
 ---
 
 # Step 2: Clone the Hadoop Repository
 
-Repository:
+## Repository
 
 ```text
 https://github.com/big-data-europe/docker-hadoop
 ```
 
-Command:
+## Command
 
 ```bash
 git clone git@github.com:big-data-europe/docker-hadoop.git
 ```
 
-Result:
+## Result
+
+The Hadoop Docker repository was successfully cloned locally.
+
+Output:
 
 ```text
 Cloning into 'docker-hadoop'
-Receiving objects
-Resolving deltas
+Receiving objects...
+Resolving deltas...
 ```
 
-The repository was successfully cloned to the local machine.
+### Screenshot
+
+```text
+step2-git-clone.png
+```
 
 ### Concept Learned
 
-Git repositories often contain infrastructure-as-code configurations that allow environments to be reproduced quickly.
+Infrastructure-as-Code allows developers and engineers to recreate environments consistently using version-controlled configuration files.
 
 ---
 
 # Step 3: Locate docker-compose.yml
 
-Commands:
+## Commands
 
 ```bash
 cd docker-hadoop
@@ -160,116 +176,403 @@ cd docker-hadoop
 dir
 ```
 
-```bash
-dir *.yml
-```
-
-*iles Found:
+## Files Found
 
 ```text
-docker-compos*.yml
+docker-compose.yml
 docker-compose-v3.yml
 ```
 
-##* Purpose
+## Purpose
 
-The docker*compose file contains the complete*configuration required to deploy t*e Hadoop environment.
+The docker-compose file contains all service definitions required to deploy the Hadoop cluster.
 
-### Concept*Learned
+### Screenshot
 
-Docker Compose uses YAML *iles to define:
-
-- Services
-- Netw*rks
-- Volumes
-- Dependencies
-
----
-*# Step 4: Deploy Hadoop Containers*
-Command:
-
-```bash
-docker compose *p -d
+```text
+step3-docker-compose-file.png
 ```
-
-Parameter:
-
-```text
--d
-`*`
-
-Means:
-
-```text
-Detached Mode
-`*`
-
-*ontainers run in the background.
-
-*--
-
-## Services Created
-
-The deplo*ment created:
-
-```text
-namenode
-da*anode
-resourcemanager
-nodemanager
-*istoryserver
-```
-
-*he following images were downloade*:
-
-```text
-bde2020/hadoop-namenode*bde2020/hadoop-datanode
-bde*020/hadoop-resourcemanager
-bde*020/hadoop-nodemanager
-bde2020/had*op-historyserver
-```
-
-Docker*also created:
-
-```text
-Volumes
-Net*orks
-Containers
-```
-
-automatically*
 
 ### Concept Learned
 
-Docker Comp*se enables the deployment of an en*ire Hadoop cluster using a single *ommand.
+Docker Compose uses YAML files to define application architecture and deployment requirements.
 
 ---
 
-# Step 5: Verify Con*ainer Health
+# Step 4: Deploy Hadoop Containers
 
-Command:
+## Command
 
-```bash*docker ps
+```bash
+docker compose up -d
 ```
 
-Results:
+## Parameter
 
-```text*namenode      *Up (healthy)
-datan*de       Up (healthy)
-resourcemana*er Up (healthy)
-nodem*nager    Up (healthy)
-historyserve** Up (healthy)
+```text
+-d
 ```
 
-### Why Healthy*Status Matters
+Stands for:
 
-Healthy status con*irms:
+```text
+Detached Mode
+```
 
-- Service*startup completed
-- Required*ports are available
-- Internal con*ainer checks passed
-- Hadoop*services are functioning
+The containers run in the background.
 
-### Conc*pt Learned
+---
 
-Container health check*
+# Hadoop Services Created
+
+The deployment successfully created:
+
+```text
+namenode
+datanode
+resourcemanager
+nodemanager
+historyserver
+```
+
+Docker automatically:
+
+- Created the network
+- Created persistent volumes
+- Downloaded required images
+- Started Hadoop services
+
+### Screenshot
+
+```text
+step4-docker-compose-up.png
+```
+
+---
+
+# Container Purpose
+
+## NameNode
+
+Role:
+
+```text
+HDFS Master Node
+```
+
+Responsibilities:
+
+- Metadata management
+- File tracking
+- Block tracking
+- Filesystem coordination
+
+---
+
+## DataNode
+
+Role:
+
+```text
+HDFS Worker Node
+```
+
+Responsibilities:
+
+- Store file blocks
+- Process read requests
+- Process write requests
+
+---
+
+## ResourceManager
+
+Role:
+
+```text
+YARN Master Service
+```
+
+Responsibilities:
+
+- Resource allocation
+- Job scheduling
+- Cluster management
+
+---
+
+## NodeManager
+
+Role:
+
+```text
+YARN Worker Service
+```
+
+Responsibilities:
+
+- Execute tasks
+- Monitor node resources
+- Communicate with ResourceManager
+
+---
+
+## HistoryServer
+
+Role:
+
+```text
+MapReduce History Tracking
+```
+
+Responsibilities:
+
+- Store completed job information
+- Job auditing
+- Performance review
+
+---
+
+# Step 5: Verify Container Health
+
+## Command
+
+```bash
+docker ps
+```
+
+## Result
+
+All Hadoop services reported:
+
+```text
+(healthy)
+```
+
+Containers Verified:
+
+```text
+namenode
+datanode
+resourcemanager
+nodemanager
+historyserver
+```
+
+Example Output:
+
+```text
+Up 9 minutes (healthy)
+```
+
+### Screenshot
+
+```text
+step5-healthy-containers.png
+```
+
+### Why This Matters
+
+Healthy status confirms:
+
+- Service startup completed
+- Internal health checks passed
+- Hadoop services are operational
+
+---
+
+# Step 6: Verify Hadoop Web Interface
+
+## URL
+
+```text
+http://localhost:9870
+```
+
+## Result
+
+Successfully opened the Hadoop NameNode interface.
+
+Displayed:
+
+```text
+Overview
+Cluster Summary
+Live Nodes
+Storage Capacity
+HDFS Statistics
+```
+
+Observed Status:
+
+```text
+namenode:9000 (active)
+```
+
+### Screenshot
+
+```text
+step6-hdfs-web-ui.png
+```
+
+---
+
+# HDFS Observations
+
+The NameNode dashboard displayed:
+
+```text
+Live Nodes: 1
+Dead Nodes: 0
+```
+
+This confirms:
+
+- DataNode connectivity
+- HDFS operation
+- Successful cluster communication
+
+---
+
+# Important Hadoop Concepts Reinforced
+
+## HDFS
+
+Stands for:
+
+```text
+Hadoop Distributed File System
+```
+
+Purpose:
+
+```text
+Distributed Storage
+```
+
+---
+
+## NameNode
+
+Stores:
+
+```text
+Metadata
+```
+
+Examples:
+
+- File names
+- File locations
+- Block locations
+
+---
+
+## DataNode
+
+Stores:
+
+```text
+Actual File Blocks
+```
+
+---
+
+## Block Storage
+
+Default HDFS Block Size:
+
+```text
+128 MB
+```
+
+Example:
+
+```text
+500 MB File
+```
+
+becomes:
+
+```text
+128 MB
+128 MB
+128 MB
+116 MB
+```
+
+---
+
+## Replication
+
+Default Replication Factor:
+
+```text
+3
+```
+
+Purpose:
+
+```text
+Fault Tolerance
+```
+
+Each block is stored three times across the cluster.
+
+---
+
+## YARN
+
+Stands for:
+
+```text
+Yet Another Resource Negotiator
+```
+
+Responsibilities:
+
+```text
+Job Scheduling
+Resource Management
+```
+
+---
+
+# Docker Networking
+
+Docker automatically created a network for Hadoop services.
+
+Purpose:
+
+```text
+Allow container-to-container communication
+```
+
+Examples:
+
+```text
+namenode ↔ datanode
+resourcemanager ↔ nodemanager
+```
+
+---
+
+# Ports Used
+
+## NameNode Web Interface
+
+```text
+9870
+```
+
+Access URL:
+
+```text
+http://localhost:9870
+```
+
+---
+
+## NameNode Service
+
+```text
